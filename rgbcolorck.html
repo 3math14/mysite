@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>rgbColorck</title>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <script>
+
+      window.onload = function() {
+      init();
+      };
+
+      function init(){
+      draw();
+      setInterval('draw();',1000);
+      }
+
+      // 時計を描画する
+      function draw() {
+
+          // 円のスタイルを定義する
+          // radius はキャンバスサイズに対する比率
+          var circle = {
+              Frame: {
+                  radius  : 1.0,
+              },
+              ColorWheel: {
+                  radius  : 0.97,
+              },
+              hour: {
+                  radius  : 0.9,
+              },
+              minute: {
+                  radius  : 0.8,
+              },
+              second: {
+                  radius  : 0.7,
+              }
+          };
+
+          // 針のスタイルを定義する
+          var hands = {
+              hour: {
+                  length  : 0.97,
+                  width   : 3,
+                  cap     : "round",
+                  color   : "#FF5555",
+                  ratio   : 0.05
+              },
+              minute: {
+                  length  : 0.97,
+                  width   : 3,
+                  cap     : "round",
+                  color   : "#55FF55",
+                  ratio   : 0.05
+              },
+              second: {
+                  length  : 0.97,
+                  width   : 3,
+                  cap     : "round",
+                  color   : "#5555FF",
+                  ratio   : 0.05
+              }
+          }
+
+          // キャンバスを設定する
+          var canvas = document.getElementById("canvas");
+          canvas.width = 360;
+          canvas.height = 360;
+          var context = canvas.getContext("2d");
+          var center = {
+              x: Math.floor(canvas.width / 2),
+              y: Math.floor(canvas.height / 2)
+          };
+          var radius = Math.min(center.x, center.y);
+          var angle;
+          var len;
+
+          // 現在時刻を取得する
+          var date = new Date();
+          var h = date.getHours() % 12;
+          var m = date.getMinutes();
+          var s = date.getSeconds();
+          var hms = h*3600 + m*60 + s
+
+          HourAngle = Math.PI * (h + m / 60) / 6;　
+          MinuteAngle = Math.PI * (m + s / 60) / 30;
+          SecondAngle = Math.PI * s / 30;
+
+
+          // 時分秒針と色を関連づける
+          var AngleList = [[HourAngle,110000,"r"],[MinuteAngle,1100,"g"],[SecondAngle,11,"b"]];
+          var color = 111111
+
+          // 60秒ごとに秒針の色を反転
+          if (m%2 == 1) {
+                color -= 11;
+                AngleList[2][1] *= -1;
+            };
+
+          // 60分ごとに分針の色を反転
+          if (h%2 == 1) {
+                color -= 1100;
+                AngleList[1][1] *= -1;
+            };
+
+          // AMPMで時針の色を反転
+          if (date.getHours() >= 12) {
+                color -= 110000;
+                AngleList[0][1] *= -1;
+            };
+
+          // 角度が狭い順に並べる
+          var sortAngleList = AngleList.sort();
+
+          // 外枠描写
+          drawSector(context, center.x, center.y, radius * circle.Frame.radius, -1 * Math.PI * (1 / 2), 360 * (Math.PI/180) - Math.PI * (1 / 2), false, "#888888");
+
+          // 角度が狭い順に色を変えながら描写
+          drawSector(context, center.x, center.y, radius * circle.ColorWheel.radius, -1 * Math.PI * (1 / 2), sortAngleList[0][0] - Math.PI * (1 / 2), false, toColor(color));
+          color = color - sortAngleList[0][1];
+
+          drawSector(context, center.x, center.y, radius * circle.ColorWheel.radius, sortAngleList[0][0] - Math.PI * (1 / 2), sortAngleList[1][0] - Math.PI * (1 / 2), false, toColor(color));
+          color = color - sortAngleList[1][1];
+
+          drawSector(context, center.x, center.y, radius * circle.ColorWheel.radius, sortAngleList[1][0] - Math.PI * (1 / 2), sortAngleList[2][0] - Math.PI * (1 / 2), false, toColor(color));
+          color = color - sortAngleList[2][1];
+
+          //drawSector(context, center.x, center.y, radius * circle.ColorWheel.radius, sortAngleList[2][0] - Math.PI * (1 / 2), sortAngleList[0][0] - Math.PI * (1 / 2), false, toColor(color));
+
+          drawSector(context, center.x, center.y, radius * circle.ColorWheel.radius, sortAngleList[2][0] - Math.PI * (1 / 2), 360 * (Math.PI/180) - Math.PI * (1 / 2), false, toColor(color));
+
+          // 時針を描画する
+          angle = Math.PI * (h + m / 60) / 6;
+          len = radius * hands.hour.length;
+          context.beginPath();
+          context.lineWidth = hands.hour.width;
+          context.lineCap = hands.hour.cap;
+          context.strokeStyle = hands.hour.color;
+          context.moveTo(center.x - Math.sin(angle) * len * hands.hour.ratio, center.y + Math.cos(angle) * len * hands.hour.ratio);
+          context.lineTo(center.x + Math.sin(angle) * len, center.y - Math.cos(angle) * len);
+          context.stroke();
+
+          // 分針を描画する
+          angle = Math.PI * (m + s / 60) / 30;
+          len = radius * hands.minute.length;
+          context.beginPath();
+          context.lineWidth = hands.minute.width;
+          context.lineCap = hands.minute.cap;
+          context.strokeStyle = hands.minute.color;
+          context.moveTo(center.x - Math.sin(angle) * len * hands.minute.ratio, center.y + Math.cos(angle) * len * hands.minute.ratio);
+          context.lineTo(center.x + Math.sin(angle) * len, center.y - Math.cos(angle) * len);
+          context.stroke();
+
+          // 秒針を描画する
+          angle = Math.PI * s / 30;
+          len = radius * hands.second.length;
+          context.beginPath();
+          context.lineWidth = hands.second.width;
+          context.lineCap = hands.second.cap;
+          context.strokeStyle = hands.second.color;
+          context.moveTo(center.x - Math.sin(angle) * len * hands.second.ratio, center.y + Math.cos(angle) * len * hands.second.ratio);
+          context.lineTo(center.x + Math.sin(angle) * len, center.y - Math.cos(angle) * len);
+          context.stroke();
+
+      }
+
+      // 扇型描写関数
+      function drawSector(context,x,y,radius, startAngle, endAngle, counterclockwise, color) {
+          context.beginPath();
+          context.moveTo(x, y);
+          context.arc(x, y, radius, startAngle, endAngle, false);
+          context.closePath();
+          context.fillStyle = color;
+          context.fill();
+      }
+
+      // 二進数をRGBに変換
+      function toColor(n) {
+          var h = "F";
+          var l = "5";
+          switch (n) {
+              case 111111:
+                  return "#"+h.repeat(6);
+              case 111100:
+                  return "#" + h.repeat(4) + l.repeat(2);
+              case 110000:
+                  return "#" + h.repeat(2) + l.repeat(4);
+              case 110011:
+                  return "#" + h.repeat(2) + l.repeat(2) + h.repeat(2);
+              case 1111:
+                  return "#" + l.repeat(2) + h.repeat(4);
+              case 1100:
+                  return "#" + l.repeat(2) + h.repeat(2) + l.repeat(2);
+              case 11:
+                  return "#" + l.repeat(4) + h.repeat(2);
+              case 0:
+                  return "#" + l.repeat(6);
+          }
+      }
+
+    </script>
+
+</body>
+</html>
+
+<!-- 参考にしたサイト
+https://qiita.com/okuchan/items/3c6908c5c90e5a70deab
+-->
