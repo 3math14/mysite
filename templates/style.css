@@ -9,7 +9,5 @@ body {
 }
 
 img {
-    width: 30em;
-    max-width: 100%;
-    min-width: 15em;
+    width: 20em;
 }
