@@ -7,3 +7,9 @@ body {
 .test {
     color: red;
 }
+
+img {
+    width: 30em;
+    max-width: 100%;
+    min-width: 15em;
+}
