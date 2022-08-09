@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Colorck</title>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <script>
+
+      var saturation = 0.5; // 彩度　0 ~ 1
+      var lightness = 1;    // 明度　0 ~ 1
+
+      window.onload = function() {
+      init();
+      };
+
+      function init(){
+      draw();
+      setInterval('draw();',1000);
+      }
+
+      // 時計を描画する
+      function draw() {
+
+          // 円のスタイルを定義する
+          // radius はキャンバスサイズに対する比率
+          var circle = {
+              ColorWheel: {
+                  radius  : 0.9,
+              },
+              hour: {
+                  radius  : 0.85,
+              },
+              minute: {
+                  radius  : 0.5,
+              },
+              second: {
+                  radius  : 0.2,
+              }
+          };
+
+          // 目盛りのスタイルを定義する
+          // from, to はキャンバスサイズに対する比率
+          var lines = {
+              long: {
+                  from    : 0.8,
+                  to      : 0.6,
+                  width   : 2,
+              },
+              short: {
+                  from    : 0.8,
+                  to      : 0.7,
+                  width   : 2,
+              },
+              mlong: {
+                   from: 0.45,
+                   to  : 0.25,
+                   width:1.5,
+                   },
+              mshort: {
+                   from: 0.45,
+                   to  : 0.35,
+                   width:1.5,
+              },
+              second: {
+                    from:0.1,
+                    to:0,
+                    width:2,
+              }
+          };
+
+          var hands = {
+              hour: {
+                  length  : 0.6,
+                  width   : 4,
+                  cap     : "round",
+                  color   : "#FF5555",
+                  ratio   : 0.05
+              },
+              minute: {
+                  length  : 0.8,
+                  width   : 3,
+                  cap     : "round",
+                  color   : "#55FF55",
+                  ratio   : 0.05
+              },
+              second: {
+                  length  : 0.89,
+                  width   : 2.5,
+                  cap     : "round",
+                  color   : "#5555FF",
+                  ratio   : 0.05
+              }
+          }
+
+          // キャンバスを設定する
+          var canvas = document.getElementById("canvas");
+          canvas.width = 360;
+          canvas.height = 360;
+          var context = canvas.getContext("2d");
+          var center = {
+              x: Math.floor(canvas.width / 2),
+              y: Math.floor(canvas.height / 2)
+          };
+          var radius = Math.min(center.x, center.y);
+          var angle;
+          var len;
+
+          // 現在時刻を取得する
+          var date = new Date();
+          var h = date.getHours() % 12;
+          var m = date.getMinutes();
+          var s = date.getSeconds();
+          var hms = h*3600 + m*60 + s
+
+          // 色相環を描写
+          context.arc(center.x, center.y, radius * circle.ColorWheel.radius, 0, Math.PI * 2, false);
+          context.fill();
+
+          var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+          var pixelArray = imageData.data;
+
+          for(var x = 0; x < canvas.width; x++) {
+              for(var y = 0; y < canvas.height; y++) {
+                  var baseIndex = (y * canvas.width + x) * 4;
+
+                  // 透明でなければ上書きする
+                  if(pixelArray[baseIndex + 3] > 0) {
+                      var hue = Math.atan2(x - center.x, y - center.y) / Math.PI / 2 * 360;
+                      var color = hsvToRGB(hue+180, saturation, lightness);
+                      pixelArray[baseIndex  ] = color[0];
+                      pixelArray[baseIndex+1] = color[1];
+                      pixelArray[baseIndex+2] = color[2];
+                  }
+              }
+          }
+          context.putImageData(imageData, 0, 0);
+
+          // 時
+          context.beginPath();
+          context.fillStyle = hsvToRgb2(360-(hms+1)/43200*360, saturation, lightness);
+          context.arc(center.x, center.y, radius * circle.hour.radius, 0, Math.PI * 2, false);
+          context.fill();
+
+          // 分
+          context.beginPath();
+          context.fillStyle = hsvToRgb2(360 - (m+1)/60*360, saturation, lightness);
+          context.arc(center.x, center.y, radius * circle.minute.radius, 0, Math.PI * 2, false);
+          context.fill();
+
+          // 秒
+          context.beginPath();
+          context.fillStyle = hsvToRgb2(360 - (s+1)/60*360, saturation, lightness);
+          context.arc(center.x, center.y, radius * circle.second.radius, 0, Math.PI * 2, false);
+          context.fill();
+
+        // 目盛りを描画する
+        for (var i = 1; i < 61; i++) {
+            angle = Math.PI * i / 30;
+            context.beginPath();
+            var line = (i % 5 == 0) ? lines.long : lines.short;
+            context.lineWidth = line.width;
+            context.strokeStyle = hsvToRgb2((540+360*(1-i/60))%360, 0.1, 0.9);
+            context.moveTo(center.x + Math.sin(angle) * radius * line.from, center.y - Math.cos(angle) * radius * line.from);
+            context.lineTo(center.x + Math.sin(angle) * radius * line.to, center.y - Math.cos(angle) * radius * line.to);
+            context.stroke();
+
+            angle = Math.PI * i / 30;
+            context.beginPath();
+            var line = (i % 5 == 0) ? lines.mlong : lines.mshort;
+            context.lineWidth = line.width;
+            context.strokeStyle = hsvToRgb2(360*(1-i/60), saturation, lightness);
+            context.moveTo(center.x + Math.sin(angle) * radius * line.from, center.y - Math.cos(angle) * radius * line.from);
+            context.lineTo(center.x + Math.sin(angle) * radius * line.to, center.y - Math.cos(angle) * radius * line.to);
+            //context.stroke();
+
+            angle = Math.PI * i / 30;
+            context.beginPath();
+            var line = lines.second;
+            context.lineWidth = line.width;
+            context.strokeStyle = hsvToRgb2(360*(1-i/60), saturation, lightness);
+            context.moveTo(center.x + Math.sin(angle) * radius * line.from, center.y - Math.cos(angle) * radius * line.from);
+            context.lineTo(center.x + Math.sin(angle) * radius * line.to, center.y - Math.cos(angle) * radius * line.to);
+            context.stroke();
+
+        }
+
+        // 時針を描画する
+          angle = Math.PI * (h + m / 60) / 6;
+          len = radius * hands.hour.length;
+          context.beginPath();
+          context.lineWidth = hands.hour.width;
+          context.strokeStyle = hsvToRgb2((540-(hms+1)/43200*360)%360, 0, lightness);
+          context.moveTo(center.x - Math.sin(angle) * len * hands.hour.ratio, center.y + Math.cos(angle) * len * hands.hour.ratio);
+          context.lineTo(center.x + Math.sin(angle) * len, center.y - Math.cos(angle) * len);
+          context.stroke();
+
+          // 分針を描画する
+          angle = Math.PI * (m + s / 60) / 30;
+          len = radius * hands.minute.length;
+          context.beginPath();
+          context.lineWidth = hands.minute.width;
+          context.lineCap = hands.minute.cap;
+          context.strokeStyle = hsvToRgb2((540 - (m+1)/60*360)%360, saturation, 0);
+          context.moveTo(center.x - Math.sin(angle) * len * hands.minute.ratio, center.y + Math.cos(angle) * len * hands.minute.ratio);
+          context.lineTo(center.x + Math.sin(angle) * len, center.y - Math.cos(angle) * len);
+          context.stroke();
+
+          // 秒針を描画する
+          angle = Math.PI * s / 30;
+          len = radius * hands.second.length;
+          context.beginPath();
+          context.lineWidth = hands.second.width;
+          context.lineCap = hands.second.cap;
+          context.strokeStyle = hsvToRgb2((540 - (s+1)/60*360) % 360, saturation, 1);
+          context.moveTo(center.x - Math.sin(angle) * len * hands.second.ratio, center.y + Math.cos(angle) * len * hands.second.ratio);
+          context.lineTo(center.x + Math.sin(angle) * len, center.y - Math.cos(angle) * len);
+          context.stroke();
+
+
+      }
+
+      function hsvToRGB(hue, saturation, value) {
+          var hi;
+          var f;
+          var p;
+          var q;
+          var t;
+
+          while (hue < 0) {
+              hue += 360;
+          }
+          hue = hue % 360;
+
+          saturation = saturation < 0 ? 0
+              : saturation > 1 ? 1
+              : saturation;
+
+          value = value < 0 ? 0
+              : value > 1 ? 1
+              : value;
+
+          value *= 255;
+              hi = (hue / 60 | 0) % 6;
+              f = hue / 60 - hi;
+              p = value * (1 -           saturation) | 0;
+              q = value * (1 -      f  * saturation) | 0;
+              t = value * (1 - (1 - f) * saturation) | 0;
+          value |= 0;
+
+          switch (hi) {
+              case 0:
+                  return [value, t, p];
+              case 1:
+                  return [q, value, p];
+              case 2:
+                  return [p, value, t];
+              case 3:
+                  return [p, q, value];
+              case 4:
+                  return [t, p, value];
+              case 5:
+                  return [value, p, q];
+          }
+
+          throw new Error('invalid hue');
+      }
+
+      // 16進数変換用
+      function toHex(v) {
+          return ("00" + v.toString(16)).slice(-2).toUpperCase();
+      }
+
+      // HSL → #xxxxxx
+      function hsvToRgb2(H,S,V) {
+          //https://en.wikipedia.org/wiki/HSL_and_HSV#From_HSV
+
+          var C = V * S;
+          var Hp = H / 60;
+          var X = C * (1 - Math.abs(Hp % 2 - 1));
+
+          var R, G, B;
+          if (0 <= Hp && Hp < 1) {[R,G,B]=[C,X,0]};
+          if (1 <= Hp && Hp < 2) {[R,G,B]=[X,C,0]};
+          if (2 <= Hp && Hp < 3) {[R,G,B]=[0,C,X]};
+          if (3 <= Hp && Hp < 4) {[R,G,B]=[0,X,C]};
+          if (4 <= Hp && Hp < 5) {[R,G,B]=[X,0,C]};
+          if (5 <= Hp && Hp < 6) {[R,G,B]=[C,0,X]};
+
+          var m = V - C;
+          [R, G, B] = [R+m, G+m, B+m];
+
+          R = Math.floor(R * 255);
+          G = Math.floor(G * 255);
+          B = Math.floor(B * 255);
+
+          return "#" + toHex(R) + toHex(G) + toHex(B);
+      }
+    </script>
+
+</body>
+</html>
