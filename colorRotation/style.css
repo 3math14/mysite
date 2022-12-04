@@ -1,0 +1,54 @@
+#rotate1 {
+  animation:1s linear infinite rotation1;
+}
+
+@keyframes rotation1{
+  0%{ transform:rotate(0);}
+  100%{ transform:rotate(360deg); }
+}
+
+#rotate2 {
+  animation:0.1s linear infinite rotation2;
+}
+
+@keyframes rotation2{
+  0%{ transform:rotate(0);}
+  100%{ transform:rotate(360deg); }
+}
+
+#rotate3 {
+  animation:0.01s linear infinite rotation3;
+}
+
+@keyframes rotation3{
+  0%{ transform:rotate(0);}
+  100%{ transform:rotate(360deg); }
+}
+
+#rotate4 {
+  animation:0.001s linear infinite rotation4;
+}
+
+@keyframes rotation4{
+  0%{ transform:rotate(0);}
+  100%{ transform:rotate(360deg); }
+}
+
+#rotate5 {
+  animation:0.0001s linear infinite rotation5;
+}
+
+@keyframes rotation5{
+  0%{ transform:rotate(0);}
+  100%{ transform:rotate(360deg); }
+}
+
+.container_image{
+    margin-bottom: 20em;
+}
+
+img {
+    width: 30em;
+    max-width: 100%;
+    min-width: 15em;
+}
