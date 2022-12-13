@@ -1,34 +1,19 @@
-#rotate1 {
-  animation:1s linear infinite rotation;
+.rotate360 {
+  animation:0.01s linear infinite rotation360;
 }
 
-#rotate2 {
-  animation:0.1s linear infinite rotation;
+.conic-gradient-hls {
+  Background: conic-gradient(red, yellow, lime, aqua, blue, fuchsia, red);
+  border-radius: 50%;
+  width: 100%;
+  padding-top: 100%;
 }
 
-#rotate3 {
-  animation:0.01s linear infinite rotation;
-}
-
-#rotate4 {
-  animation:0.001s linear infinite rotation;
-}
-
-#rotate5 {
-  animation:0.0001s linear infinite rotation;
-}
-
-@keyframes rotation{
+@keyframes rotation360{
   0%{ transform:rotate(0);}
   100%{ transform:rotate(360deg); }
 }
 
-.container_image{
+.container-image{
     margin-bottom: 20em;
-}
-
-img {
-    width: 30em;
-    max-width: 100%;
-    min-width: 15em;
 }
