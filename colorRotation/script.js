@@ -5,15 +5,15 @@ const btnCYM = document.getElementById('btn_cym');
 
 cc = document.getElementById('color-circle');
 
-btnRotate.addEventListener('click', function(){
-const result = cc.classList.toggle('rotate');
+// btnRotate.addEventListener('click', function(){
+// const result = cc.classList.toggle('rotate');
 
-if (result) {
-    btnRotate.textContent = `Start`;
-} else {
-    btnRotate.textContent = `Stop`;
-}
-});
+// if (result) {
+//     btnRotate.textContent = `Start`;
+// } else {
+//     btnRotate.textContent = `Stop`;
+// }
+// });
 
 btnHue.addEventListener('click', function(){
     cc.classList.remove('conic-gradient-hue-2');
