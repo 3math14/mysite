@@ -5,11 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="style.css">
+
     <title>色相環回転</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 </head>
 <body>
 
-<div class="conic-gradient-hls rotate360"></div>
+<div id="color-circle" class="conic-gradient-hue-2 rotate"></div>
+
+<div class="btn">
+<div id="btn_hue">Hue</div>
+<div id="btn_rgb">RGB</div>
+<div id="btn_cym">CYM</div>
+</div>
+
+<input id="rotate_speed" type="number" name="rotate_speed" required>
+
+<div id="btn_rotate">Start</div>
+
+<script src="./script.js"></script>
 
 </body>
 </html>

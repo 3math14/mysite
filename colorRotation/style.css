@@ -1,9 +1,44 @@
-.rotate360 {
+.rotate {
   animation:0.01s linear infinite rotation360;
 }
 
-.conic-gradient-hls {
+.conic-gradient-hue-1 {
+  Background: conic-gradient(red 60deg, yellow 0deg,yellow 120deg, lime 0deg,lime 180deg, aqua 0,aqua 240deg, blue 0,blue 300deg, fuchsia 0);
+  border-radius: 50%;
+  width: 100%;
+  padding-top: 100%;
+}
+
+.conic-gradient-hue-2 {
   Background: conic-gradient(red, yellow, lime, aqua, blue, fuchsia, red);
+  border-radius: 50%;
+  width: 100%;
+  padding-top: 100%;
+}
+
+.conic-gradient-cmy-1 {
+  Background: conic-gradient(rgb(0,255,255) 120deg, rgb(255,0,255) 0, rgb(255,0,255) 240deg, rgb(255,255,0) 0);
+  border-radius: 50%;
+  width: 100%;
+  padding-top: 100%;
+}
+
+.conic-gradient-cmy-2 {
+  Background: conic-gradient(rgb(0,255,255), rgb(255,0,255),rgb(255,255,0), rgb(0,255,255));
+  border-radius: 50%;
+  width: 100%;
+  padding-top: 100%;
+}
+
+.conic-gradient-rgb-1 {
+  Background: conic-gradient(rgb(255,0,0) 120deg, rgb(0,255,0) 0, rgb(0,255,0) 240deg, rgb(0,0,255) 0);
+  border-radius: 50%;
+  width: 100%;
+  padding-top: 100%;
+}
+
+.conic-gradient-rgb-2 {
+  Background: conic-gradient(rgb(255,0,0), rgb(0,255,0), rgb(0,0,255), rgb(255,0,0));
   border-radius: 50%;
   width: 100%;
   padding-top: 100%;
