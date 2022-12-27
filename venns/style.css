@@ -1,0 +1,57 @@
+
+.circle {
+  width: 66%;
+  height: auto;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  padding-top: 66%;
+  position: absolute;
+  top: 0;
+}
+
+.circle-red {
+  background: rgba(255, 0, 0, 1);
+}
+
+.circle-green {
+  background: rgba(0, 255, 0, 1);
+  left: 33%;
+}
+
+.circle-blue {
+  background: rgba(0, 0, 255, 1);
+  left: 16.5%;
+  top: 33%;
+}
+
+.venns-container {
+  position: relative;
+  width : 50%;
+  height : auto;
+}
+
+.venns-container::before {
+  content: "";
+  display: block;
+  padding-top: 100%; /* 比率を指定 */
+}
+
+.form {
+  position : relative;
+}
+
+#colorCode{
+  color :rgba(255, 255, 255, 1)
+}
+
+#colorCodeRed{
+  color :rgba(255, 0, 0, 1)
+}
+
+#colorCodeGreen{
+  color :rgba(0, 255, 0, 1)
+}
+
+#colorCodeBlue{
+  color :rgba(0, 0, 255, 1)
+}

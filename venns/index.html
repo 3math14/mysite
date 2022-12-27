@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <title>色ベン</title>
+</head>
+
+<body>
+    <div>
+        
+        <div class="venns-container">
+            <div class="circle circle-red"></div>
+            <div class="circle circle-green"></div>
+            <div class="circle circle-blue"></div>
+        </div>
+
+        <!-- <div><span id="colorCode">#</span><span id="colorCodeRed">FF</span><span id="colorCodeGreen">FF</span><span id="colorCodeBlue">FF</span></div> -->
+
+        <div class="form">
+            <p>
+                <label for="input-red">R :</label>
+                <input id="input-red" type="number" name="input-red" value="255" step="1" min="0" max="255" required>
+            
+                <label for="input-green">G :</label>
+                <input id="input-green" type="number" name="input-green" value="255" step="1" min="0" max="255" required>
+        
+                <label for="input-blue">B :</label>
+                <input id="input-blue" type="number" name="input-blue" value="255" step="1" min="0" max="255" required>
+            </p>
+        </div>
+    
+    </div>
+</body>
+
+<script src="./script.js"></script>
+
+</html>
