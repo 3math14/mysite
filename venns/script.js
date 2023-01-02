@@ -34,9 +34,9 @@ function update_field(){
   changeCss(0,'.circle-blue','background',`rgba(0,0,${blue},1)`);
   changeCss(0,'#colorCodeBlue','color',`rgba(0,0,${blue},1)`);
   changeCss(0,'#colorCode','color',`rgba(${red},${green},${blue},1)`);
-  document.getElementById('colorCodeRed').textContent = toHex(red);
-  document.getElementById('colorCodeGreen').textContent = toHex(green);
-  document.getElementById('colorCodeBlue').textContent = toHex(blue);
+  document.getElementById('colorCodeRed').textContent = toHex(Number(red));
+  document.getElementById('colorCodeGreen').textContent = toHex(Number(green));
+  document.getElementById('colorCodeBlue').textContent = toHex(Number(blue));
 }
 
 $(function() {
