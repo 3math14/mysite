@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>リバーシ（オセロ）ゲーム - JavaScript版</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>リバーシ（オセロ）ゲーム</h1>
+        <p class="subtitle">石の反転回数の合計で勝敗が決まります</p>
+        
+        <div class="game-controls">
+            <div class="mode-selection">
+                <h2>対戦モードを選択</h2>
+                <button id="btn-human" class="mode-btn active">対人対戦</button>
+                <button id="btn-cpu" class="mode-btn">CPU対戦</button>
+            </div>
+            
+            <div id="cpu-difficulty" class="cpu-settings" style="display: none;">
+                <label for="difficulty-select">難易度:</label>
+                <select id="difficulty-select">
+                    <option value="easy">簡単</option>
+                    <option value="medium">普通</option>
+                    <option value="hard">難しい</option>
+                </select>
+            </div>
+            
+            <div class="display-settings">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="show-flip-counts" checked>
+                    <span>石ごとに反転回数を表示</span>
+                </label>
+            </div>
+            
+            <button id="btn-new-game" class="btn-primary">新しいゲーム</button>
+        </div>
+        
+        <div class="game-info">
+            <div class="score-panel">
+                <div class="player-info black">
+                    <div class="player-name">黒 (あなた)</div>
+                    <div class="player-stats">
+                        <div>石の数: <span id="black-count">2</span></div>
+                        <div>反転回数合計: <span id="black-flip-sum">0</span></div>
+                    </div>
+                </div>
+                <div class="player-info white">
+                    <div class="player-name">白 <span id="cpu-label" style="display: none;">(CPU)</span><span id="human-label">(プレイヤー2)</span></div>
+                    <div class="player-stats">
+                        <div>石の数: <span id="white-count">2</span></div>
+                        <div>反転回数合計: <span id="white-flip-sum">0</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="current-player">
+                <div id="current-player-indicator">現在のターン: <span id="current-player-name">黒</span></div>
+            </div>
+        </div>
+        
+        <div class="board-container">
+            <div id="board" class="board"></div>
+        </div>
+        
+        <div id="message" class="message"></div>
+        
+        <div class="rules">
+            <h3>ルール</h3>
+            <ul>
+                <li>通常のリバーシと同じルールでプレイします</li>
+                <li>各石は反転された回数を記憶しています</li>
+                <li>ゲーム終了時、獲得した石の反転回数の合計が多い方が勝ちです</li>
+                <li>石の数ではなく、反転回数の合計で勝敗が決まります</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script src="game.js"></script>
+</body>
+</html>
+
